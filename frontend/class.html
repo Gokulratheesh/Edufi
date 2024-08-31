@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPlatform - Study Area Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 400px;
+            padding: 20px;
+            text-align: center;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #002244;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Select Study Area</div>
+        <select id="study-area-dropdown">
+            <option value="">Select Study Area</option>
+            <option value="class-1">Class 1</option>
+            <option value="class-2">Class 2</option>
+            <option value="class-3">Class 3</option>
+            <option value="class-4">Class 4</option>
+            <option value="class-5">Class 5</option>
+            <option value="class-6">Class 6</option>
+            <option value="class-7">Class 7</option>
+            <option value="class-8">Class 8</option>
+            <option value="class-9">Class 9</option>
+            <option value="class-10">Class 10</option>
+            <option value="class-11">Class 11</option>
+            <option value="class-12">Class 12</option>
+            <option value="btech">BTech</option>
+            <option value="bsc">BSc</option>
+                <option value="bcom">BCom</option>
+                <option value="ba">BA</option>
+                <option value="mtech">MTech</option>
+                <option value="msc">MSc</option>
+                <option value="mcom">MCom</option>
+                <option value="ma">MA</option>
+                <!-- Technical Courses -->
+                <option value="diploma">Diploma</option>
+                
+        </select>
+
+        <div id="btech-options" class="hidden">
+            <select id="btech-semester">
+                <option value="">Select Semester</option>
+                <option value="semester-1">Semester 1</option>
+                <option value="semester-2">Semester 2</option>
+                <option value="semester-3">Semester 3</option>
+                <option value="semester-4">Semester 4</option>
+                <option value="semester-5">Semester 5</option>
+                <option value="semester-6">Semester 6</option>
+                <option value="semester-7">Semester 7</option>
+                <option value="semester-8">Semester 8</option>
+            </select>
+
+            <select id="btech-department">
+                <option value="">Select Department</option>
+                <option value="cse">Computer Science Engineering</option>
+                <option value="ece">Electronics and Communication Engineering</option>
+                <option value="me">Mechanical Engineering</option>
+                <option value="ee">Electrical Engineering</option>
+                <option value="ce">Civil Engineering</option>
+                <option value="it">Information Technology</option>
+                <option value="ae">Aerospace Engineering</option>
+                <option value="bt">Biotechnology</option>
+                <option value="che">Chemical Engineering</option>
+                <option value="pe">Production Engineering</option>
+                <option value="mech">Mechatronics Engineering</option>
+                <option value="nuclear">Nuclear Engineering</option>
+                <!-- Add more departments as needed -->
+            </select>
+        </div>
+
+        <button onclick="submitSelection()">Submit</button>
+    </div>
+
+    <script>
+        document.getElementById('study-area-dropdown').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const btechOptions = document.getElementById('btech-options');
+            
+            if (selectedValue === 'btech') {
+                btechOptions.classList.remove('hidden');
+            } else {
+                btechOptions.classList.add('hidden');
+            }
+        });
+
+        function submitSelection() {
+            const studyArea = document.getElementById('study-area-dropdown').value;
+            const semester = document.getElementById('btech-semester').value;
+            const department = document.getElementById('btech-department').value;
+
+            if (studyArea === 'btech' && (semester === '' || department === '')) {
+                alert('Please select both semester and department.');
+                return;
+            }
+
+            // Store the selections in localStorage
+            localStorage.setItem('studyArea', studyArea);
+            localStorage.setItem('btechSemester', semester);
+            localStorage.setItem('btechDepartment', department);
+
+            // Redirect to chat interface
+            window.location.href = 'chat.html';
+        }
+    </script>
+</body>
+</html>

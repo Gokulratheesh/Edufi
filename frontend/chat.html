@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPlatform Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #003366;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            justify-content: center;
+        }
+        .sidebar h {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .sidebar img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+        .sidebar .option-btn {
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            background-color: #00509e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .sidebar .option-btn:hover {
+            background-color: #003d79;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #003366;
+            color: white;
+        }
+        .profile-section {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .profile-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .profile-name {
+            font-weight: 400;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            z-index: 1;
+        }
+        .profile-dropdown a {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+        .profile-dropdown a:hover {
+            background-color: #f5f5f5;
+        }
+        .profile-dropdown a:last-child {
+            border-bottom: none;
+        }
+        .profile-dropdown i {
+            margin-right: 10px;
+        }
+        .chat-header img {
+            width: 120px;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+        }
+        .message {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            max-width: 60%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .message.user {
+            background-color: #003366;
+            color: white;
+            margin-left: auto;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+        .input-container input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-right: 10px;
+        }
+        .input-container button {
+            padding: 12px 24px;
+            background-color: #003366;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h>Study Materials</h>
+        <button class="option-btn" id="notes-btn">Notes</button>
+        <button class="option-btn" id="previous-questions-btn">Previous Year Questions</button>
+        <button class="option-btn" id="resources-btn">Resources</button>
+    </div>
+
+    <div class="chat-container">
+        <div class="header">
+            <div class="chat-header">
+                <img src="reaalst.png" alt="Realist Logo">
+            </div>
+            <div class="profile-section">
+                <img src="rllogo.png" alt="Profile Logo" class="profile-logo" onclick="toggleDropdown()">
+                <span class="profile-name">Username</span>
+                <div class="profile-dropdown" id="profile-dropdown">
+                    <a href="#"><i class="fas fa-user-cog"></i>Manage Profile</a>
+                    <a href="#"><i class="fas fa-sign-out-alt"></i>Log Out</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="messages" id="message-container">
+            <div class="message">Hello! How can I help you today?</div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    
+
+    <script>
+        function sendMessage() {
+            const messageContainer = document.getElementById('message-container');
+            const messageInput = document.getElementById('message-input');
+            const messageText = messageInput.value;
+
+            if (messageText.trim() !== '') {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'user');
+                messageElement.textContent = messageText;
+                messageContainer.appendChild(messageElement);
+                messageInput.value = '';
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+        }
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.getElementById('notes-btn').addEventListener('click', function() {
+            const studyArea = localStorage.getItem('studyArea');
+            if (studyArea) {
+                alert(`Opening Notes for ${studyArea}`);
+                // Implement logic to open the Notes section based on the study area
+            } else {
+                alert('Please select a study area first.');
+            }
+        });
+
+        document.getElementById('previous-questions-btn').addEventListener('click', function() {
+            const studyArea = localStorage.getItem('studyArea');
+            if (studyArea) {
+                alert(`Opening Previous Year Questions for ${studyArea}`);
+                // Implement logic to open the Previous Year Questions section based on the study area
+            } else {
+                alert('Please select a study area first.');
+            }
+        });
+
+        document.getElementById('resources-btn').addEventListener('click', function() {
+            const studyArea = localStorage.getItem('studyArea');
+            if (studyArea) {
+                alert(`Opening Resources for ${studyArea}`);
+                // Implement logic to open the Resources section based on the study area
+            } else {
+                alert('Please select a study area first.');
+            }
+        });
+    </script>
+</body>
+</html>
